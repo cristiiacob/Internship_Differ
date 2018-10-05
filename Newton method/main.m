@@ -8,7 +8,7 @@ n = 999; % spaces in spatial length (grid points = n + 1)
 m = 1000; % timesteps
 
 t = linspace(t_start,t_end,m);
-rho = linspace(rho_start,rho_end,n+1)'; %TODO check how you define the grid
+rho = linspace(rho_start,rho_end,n+1)'; %TODO check how you define the grid spacing
 drho = rho(2) - rho(1);
 dt = t(2) - t(1); Fs = 1/dt;
 T0 = zeros(n+1,1);
