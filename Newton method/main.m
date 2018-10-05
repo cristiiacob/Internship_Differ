@@ -26,9 +26,8 @@ Told = T0;
 T(:,1) = T0;
 
 for j = 2:m % loop thorugh time steps
-    T_temp = Newton_alg(Told,a,b,drho,dt);
-    T(:,j) = T_temp;
-    Told = T_temp;
+    T(:,j) = Newton_alg(Told,a,c,drho,dt);
+    Told = T(:,j);
 end
 
 figure(2);
