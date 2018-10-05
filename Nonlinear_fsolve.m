@@ -15,7 +15,7 @@ T0 = 0*sin(8*pi*rho) + 5;
 T0(end) = C;
 
 % Pdep = 200*normpdf(0,-round(n/2)+1:round(n/2),50)';
-Ptot = 0.7; sigma = 0.05;  MW2keVs = .5;%6.24e21/2.1e19; % Factor to convert to keV
+Ptot = 0.7; sigma = 0.05;  MW2keVs = .5;%6.24e21/2.1e19; % Factor to convert to keV   
 Pdep = MW2keVs*Ptot/(sigma*sqrt(pi))*exp(-(rho-L/2).^2/sigma.^2);
 plot(Pdep)
 u = sin(2*pi*2*t) + 0.3*sin(2*pi*7*t);
@@ -26,7 +26,7 @@ title ('Initial temperature distribution')
 xlabel ('\rho')
 ylabel ('T')
 
-options = optimoptions(@fsolve,'Display','iter','MaxIterations',1000,'SpecifyObjectiveGradient',true,'CheckGradients',true,'FiniteDifferenceType','central','FiniteDifferenceStepSize',1e-3);
+options = optimoptions(@fsolve,'Display','iter','MaxIterations',300,'SpecifyObjectiveGradient',true,'CheckGradients',true,'FiniteDifferenceType','central','FiniteDifferenceStepSize',1e-3);
 Told = T0;
 T(:,1) = T0;
 
@@ -41,6 +41,6 @@ end
 figure(2);
 h = surf(t,rho,T)
 set(h,'LineStyle','none')
-xlabel('t ')
-ylabel('\rho')
-zlabel('T(x,t)')
+  xlabel('t ')
+  ylabel('\rho')
+  zlabel('T(x,t)')

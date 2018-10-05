@@ -19,6 +19,8 @@ c = 0; % right boundary condition value
 
 % Set input
 Pdep = 100*normpdf(0,-round(n/2)+1:round(n/2),10)'; % deposition profile
+sigma = 5; mu = L/2; K = 10;
+Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(ro-mu).^2/sigma.^2)';
 % u = @(t) 10*(sin(10*pi*t) + 1)*(t<2.5);
 % Ptot = 0.7; sigma = 0.05;  MW2keVs = .5;%6.24e21/2.1e19; % Factor to convert to keV
 % Pdep = MW2keVs*Ptot/(sigma*sqrt(pi))*exp(-(ro-L/2).^2/sigma.^2);
@@ -55,7 +57,7 @@ P1(2:end-1) = 2*P1(2:end-1);
 
 f = Fs*(0:(m/2))/m;
 figure(3)
-plot(f,P1) 
+stem(f(1:10),P1(1:10)) 
 title('Single-Sided Amplitude Spectrum of S(t)')
 xlabel('f (Hz)')
 ylabel('|P1(f)|')
