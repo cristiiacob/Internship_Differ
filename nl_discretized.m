@@ -1,14 +1,14 @@
-function [F,J] = nl_discretized(T,Told,C,n,drho,dt)
-
-s = 2/3 * dt / (drho^3);
-
+function [F,J] = nl_discretized(T,Told,C,n,drho,dt,Pdep,u)
+gamma = 1;
+s = gamma * 2/3 * dt / (drho^3);
+q = 2/3 * dt;
 F = zeros(n+1,1);
 % F(1) = Told(1) - T(1);
-F(1) = Told(1) + s*T(2)^2 + s*T(1)^2 - 2*s*T(1)*T(2) - T(1);
+F(1) = Told(1) + s*T(2)^2 + s*T(1)^2 - 2*s*T(1)*T(2) - T(1) + q*Pdep(1)*u;
 for i = 2:n
-    F(i) = Told(i) + s*(T(i+1))^2-s*(T(i-1))^2 - T(i)*(2*s*T(i+1) - 2*s*T(i-1) + 1);
+    F(i) = Told(i) + s*(T(i+1))^2-s*(T(i-1))^2 - T(i)*(2*s*T(i+1) - 2*s*T(i-1) + 1) + q*Pdep(i)*u;
 end
-F(n+1) = T(n+1) - C;
+F(n+1) = T(n+1) - C + q*Pdep(n+1)*u;
 
 % Evaluate the Jacobian if nargout > 1
 if nargout > 1

@@ -13,7 +13,7 @@ t = 0.;
 P = 200*normpdf(0,-round(n/2):round(n/2),50)';
 % pvec = 150*normpdf(0,-m/2+1:m/2,75);
 time_v = 0:m-1;
-pvec = .1*sin(.01*pi*time_v);
+pvec = 0*.1*sin(.01*pi*time_v);
 for j = 1:n+2
    pvect(j,:) = pvec;  
 end
@@ -33,7 +33,8 @@ b(1) = -2.*q*a*dx;
 
 ro = linspace(ro_start,ro_end, n+2)';
 
-T_tk = 1*sin(2*pi*ro) + 5;
+% T_tk = 1*sin(2*pi*ro) + 5;
+T_tk = 100*normpdf(0,-round(n/2):round(n/2),50)' + 5;
 T_tk(end) = C;
 
 figure(1)
@@ -55,7 +56,7 @@ for k = 1:m
     c = T_tk + b;
     T_tk_1 = A\c;
 
-        T_tk_1 = T_tk_1 + 0*P.*pvect(:,k);
+        T_tk_1 = T_tk_1 + P.*pvect(:,k);
 
     % this is very time consuming later we will discuss faster ways to solve this problem using iterative methods
 
@@ -73,5 +74,3 @@ title ('Temperature distribution over time')
 xlabel ('t')
 ylabel ('rho')
 zlabel ('T')
-figure(3)
-mesh (tvec,ro,pvect)
