@@ -9,7 +9,7 @@ k = 0;
 err = 1;
 while err > 1e-7 && k <= 100
     F(1) = Told(1) + s*T(2)^2 + s*T(1)^2 - 2*s*T(1)*T(2) - T(1) - s*(drho^2)*(a^2) + q* Pdep(1)*u;
-    F(n+1) =  T(n+1) - c + (2*dt/3) * q*Pdep(n+1)*u;
+    F(n+1) =  T(n+1) - c + q*Pdep(n+1)*u;
     
     main = zeros(n+1,1); upper = zeros(n,1); under = zeros(n,1);
     main(1) = 2*s*(T(1) - T(2)) - 1;
