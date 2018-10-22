@@ -1,6 +1,6 @@
 function [T] = Newton_alg_3rd_order(Told,a,c,drho,dt,Pdep,u)
 %   Detailed explanation goes here
-s = dt / 4 / (drho)^4;
+s = -dt / 4 / (drho)^4; %% is minus ok
 q = 2/3 * dt;
 n = length(Told) - 1;
 F = zeros(n+1,1);
@@ -16,7 +16,7 @@ while err > 1e-7 && k <= 100
     main(n+1) = 1;
     upper(1) = s*(3*T(2)^2 - 6*T(1)*T(2) + 3*T(1)^2);
     
-    for i = 2:n
+    for i = 2:n 
         F(i) = s*(T(i+1)^3 - 2*T(i)*T(i+1)^2 - T(i-1)*T(i+1)^2 + 4*T(i-1)*T(i)*T(i+1) - ...
             - (T(i-1)^2)*T(i+1) - 2*(T(i-1)^2)*T(i) + T(i-1)^3) - T(i) + Told(i) + q*Pdep(i)*u;
         main(i) = s*(-2*T(i+1)^2 + 4*T(i-1)*T(i+1) - 2*T(i-1)^2) - 1;

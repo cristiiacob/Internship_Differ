@@ -1,13 +1,13 @@
 clc; clear all; close all
 L = 100; % length in spatial coordinates
 rho_start = 0; rho_end = L;
-Time = 1; % length in time
+t_start =0; t_end = 5; % length in time
 a = 0;
-C = 1; % constant temperature at the end of the bar
-n = 199;  % spaces in length (grid points = n+1)
+C = 2; % constant temperature at the end of the bar
+n = 99;  % spaces in length (grid points = n+1)
 m = 1000.; % timestamps
 
-t = linspace(0,Time,m);
+t = linspace(t_start,t_end - t_end/m ,m);
 rho = linspace(rho_start,rho_end, n+1)';
 drho = rho(2) - rho(1);
 dt = t(2) - t(1);
@@ -20,8 +20,8 @@ T0(end) = C;
 sigma = 10; mu = L/2; K = 10;
 Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2);
 plot(Pdep)
-u = sin(2*pi*5*t) %.* (t<=0.25);
-T0 = T0 + Pdep*u(1);
+u = sin(2*pi*7*t) + sin(2*pi*9*t) + 3; %.* (t<=0.25);
+T0 = T0;
 figure(1)
 plot (rho,T0,'-')
 title ('Initial temperature distribution')

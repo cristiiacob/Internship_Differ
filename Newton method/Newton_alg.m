@@ -1,5 +1,6 @@
 function [T] = Newton_alg(Told,a,c,drho,dt,Pdep,u)
 %   Detailed explanation goes here
+
 s = 2/3 * dt / (drho)^3;
 q = 2/3 * dt;
 n = length(Told) - 1;
