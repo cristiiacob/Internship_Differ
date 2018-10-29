@@ -1,5 +1,6 @@
 clc; clear all; close all
 L = .5; % length in spatial coordinates
+% L = 1;
 rho_start = 0; rho_end = L;
 t_start = 0.0; t_end = 10;
 a = 0;  
@@ -13,13 +14,15 @@ drho = rho(2) - rho(1);
 dt = t(2) - t(1); Fs = 1/dt;
 
 P = 200*normpdf(0,-round(n/2):round(n/2)+1,50)';
+plot(P)
 pvec = sin(2*pi*7*t) + sin(2*pi*9*t) + 3;
 for j = 1:n+2
    pvect(j,:) = pvec;  
 end
-gamma = 1; % Diffusivity constant
+gamma = 1e6; % Diffusivity constant
+% gamma = 1;
 
-q = gamma * dt / (drho^2) * 2/3; 
+q = dt / (drho^2) * 2/3
 
 Adiag = (2*q + 1)*ones(n+2,1); Adiag(end) = 1;
 Aover = -q*ones(n+2,1); Aover(2) = -2.*q;
@@ -50,7 +53,7 @@ T(:,1) = T_tk;
 for k = 1:m
     c = T_tk + b;
     T_tk_1 = A\c;
-    T_tk_1 = T_tk_1 + P.*pvect(:,k);
+    T_tk_1 = T_tk_1 + dt*P.*pvect(:,k);
     T(:,k) = T_tk_1;
     T_tk = T_tk_1;
 end
