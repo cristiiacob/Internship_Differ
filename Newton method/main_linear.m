@@ -1,4 +1,7 @@
 clc; clear all; close all
+set(groot, 'defaultAxesTickLabelInterpreter','latex'); 
+set(groot, 'defaultLegendInterpreter','latex');
+set(groot,'defaulttextinterpreter','latex'); 
 L = 0.5; % Spatial length
 t_start = 0.0; t_end = 10;
 rho_start = 0; rho_end = L; % 1200 for discrete time
@@ -49,9 +52,9 @@ end
 figure(3);
 h = surf(t,rho,T)
 set(h,'LineStyle','none')
-xlabel('t ')
-ylabel('\rho')
-zlabel('T(x,t)')
+xlabel('t')
+ylabel('$\rho$')
+zlabel('$T\left(\rho,t\right)$')
 
 %%        
 m = 200;
@@ -68,7 +71,7 @@ stem(f,P1) ;
 set(gca,'YScale','log'); 
 title('Single-Sided Amplitude Spectrum of T(t)')
 xlabel('f (Hz)')
-ylabel('|T(f)|')
+ylabel('$|T(f)|$')
 
 figure(5)
 plot(T((n+1)/2,:))

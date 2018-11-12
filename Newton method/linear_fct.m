@@ -1,6 +1,7 @@
 function [T] = linear_fct(Told,a,c,drho,dt,Pdep,u)
 %   Detailed explanation goes here
-s = 2/3 * dt / (drho)^2;
+gamma = 1/2;
+s = gamma* 2/3 * dt / (drho)^2;
 q = 2/3 * dt;
 n = length(Told) - 1;
 F = zeros(n+1,1);

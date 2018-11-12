@@ -1,4 +1,7 @@
 clc; clear all; close all
+set(groot, 'defaultAxesTickLabelInterpreter','latex'); 
+set(groot, 'defaultLegendInterpreter','latex');
+set(groot,'defaulttextinterpreter','latex'); 
 L = .5; % length in spatial coordinates
 % L = 1;
 rho_start = 0; rho_end = L;
@@ -13,7 +16,11 @@ rho = linspace(rho_start,rho_end,n+2)'; %TODO check how you define the grid spac
 drho = rho(2) - rho(1);
 dt = t(2) - t(1); Fs = 1/dt;
 
-P = 200*normpdf(0,-round(n/2):round(n/2)+1,50)';
+% P = 200*normpdf(0,-round(n/2):round(n/2)+1,50)';
+sigma = .06; mu = L/2; K = 1;
+P = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2);
+% Pdep = ones(1,n+1); Pdep(end) = 0;
+figure(1)
 plot(P)
 pvec = sin(2*pi*7*t) + sin(2*pi*9*t) + 3;
 for j = 1:n+2
@@ -22,7 +29,7 @@ end
 gamma = 1e6; % Diffusivity constant
 % gamma = 1;
 
-q = dt / (drho^2) * 2/3
+q = dt / (drho^2) * 2/3;
 
 Adiag = (2*q + 1)*ones(n+2,1); Adiag(end) = 1;
 Aover = -q*ones(n+2,1); Aover(2) = -2.*q;
@@ -31,7 +38,7 @@ Aunder = -q*ones(n+2,1); Aunder(n+1:end) = 0;
 A = spdiags([Aunder,Adiag,Aover],[-1 0 1],n+2,n+2);
 
 b = zeros(n+2,1);
-b(1) = -2.*q*a*drho;
+b(1) = -1.*q*a*drho;
 % b(end) = q*C;
 
 rho = linspace(rho_start,rho_end, n+2)';
@@ -42,7 +49,7 @@ T_tk(end) = C;
 figure(1)
 plot (rho,T_tk,'-')
 title ('Initial condition for Temperature distribution')
-xlabel ('ro')
+xlabel ('$\rho$')
 ylabel ('T')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -50,10 +57,10 @@ ylabel ('T')
 T=zeros(n+2,m);
 T(:,1) = T_tk;
 
-for k = 1:m
-    c = T_tk + b;
+for k = 2:m
+    c = T_tk + b + dt*2/3*P.*pvect(:,k-1);
     T_tk_1 = A\c;
-    T_tk_1 = T_tk_1 + dt*P.*pvect(:,k);
+    T_tk_1 = T_tk_1 ;
     T(:,k) = T_tk_1;
     T_tk = T_tk_1;
 end
@@ -62,8 +69,8 @@ figure(2)
 mesh (t,rho,T)
 title ('Temperature distribution over time')
 xlabel ('t')
-ylabel ('rho')
-zlabel ('T')
+ylabel ('$\rho$')
+zlabel ('$T\left(\rho,t\right)$')
 
 figure(3)
 plot(T((n+2)/2,:))
@@ -82,4 +89,4 @@ stem(f,P1) ;
 set(gca,'YScale','log'); 
 title('Single-Sided Amplitude Spectrum of T(t)')
 xlabel('f (Hz)')
-ylabel('|T(f)|')
+ylabel('$|T\left(f\right)|$')

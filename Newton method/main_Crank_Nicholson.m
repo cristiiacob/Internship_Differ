@@ -1,7 +1,7 @@
 clc; clear all; close all
 % the nonlinear PDE with alpha = 1
 L = 1000; % Spatial length
-t_start = 0.0; t_end = 10;
+t_start = 0.0; t_end = 1;
 rho_start = 0; rho_end = L; % 1200 for discrete time
 Time = 1; % Time length
 a = 0; c = 2; % boundary conditions
@@ -50,8 +50,8 @@ figure(3);
 h = surf(t,rho,T)
 set(h,'LineStyle','none')
 xlabel('t ')
-ylabel('\rho')
-zlabel('T(x,t)')
+ylabel('$\rho$')
+zlabel('$T\left(\rho,t\right)$')
 
 %%               
 S = T((n+1)/2,:);
@@ -66,8 +66,8 @@ figure(4)
 stem(f,P1) ;
 set(gca,'YScale','log'); 
 title('Single-Sided Amplitude Spectrum of T(t)')
-xlabel('f (Hz)')
-ylabel('|T(f)|')
+xlabel('$f \left(Hz\right)$')
+ylabel('$|T(f)|$')
 
 figure(5)
 plot(T((n+1)/2,:))

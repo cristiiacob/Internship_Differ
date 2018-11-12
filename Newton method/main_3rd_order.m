@@ -1,13 +1,15 @@
 %% 3rd order expantion
-
+set(groot, 'defaultAxesTickLabelInterpreter','latex'); 
+set(groot, 'defaultLegendInterpreter','latex');
+set(groot,'defaulttextinterpreter','latex'); 
 clc; clear all; close all
 L = 1000; % Spatial length
-t_start = 0.0; t_end = 10;
+t_start = 0.0; t_end = 500;
 rho_start = 0; rho_end = L; % 1200 for discrete time
 Time = 1; % Time length
 a = 0; c = 2; % boundary conditions
 n = 99; % spaces in spatial length (grid points = n + 1)
-m = 1000; % time points 
+m = 50000; % time points 
 
 % t = linspace(t_start,t_end ,m);
 t = linspace(t_start,t_end - t_end/m ,m);
@@ -20,15 +22,15 @@ T0(end) = c;
 % T0 = T0(:,1);
 T = zeros(n+1,m);
 
-s = dt / 4 / (drho)^3
+% s = dt / 4 / (drho)^3
 
-sigma = 100; mu = L/2; K = 10000;
+sigma = 125; mu = L/2; K = 50000;
 Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1) = 0; Pdep(end) = 0;
 % Pdep = ones(1,n+1); Pdep(end-10:end) = 0;
 figure(1)
 plot(Pdep)
 %%
-u = 1*(sin(2*pi*7*t) + sin(2*pi*9*t)) + 3;
+u = 1*(sin(2*pi*9*t) + 1*sin(2*pi*7*t)) + 3;
 
 % Initialize Tmperature elements
 % T0 = T0 + Pdep;
@@ -44,16 +46,16 @@ for j = 2:m % loop thorugh time steps
     T(:,j) = T(:,j) ; % Should introduce in Newton?
     Told = T(:,j);
 end
-
+%%
 figure(3);
 h = surf(t,rho,T)
 set(h,'LineStyle','none')
 xlabel('t ')
-ylabel('\rho')
-zlabel('T(x,t)')
+ylabel('$\rho$')
+zlabel('$T\left(\rho,t\right)$')
  % temp
  m = 200;
-S = T((n+1)/2,801:end);
+S = T((n+1)/2+30,49801:end);
 Y = fft(S)/length(S);
 P2 = abs(Y);
 P1 = P2(1:m/2+1);
@@ -65,8 +67,8 @@ figure(4)
 stem(f,P1) ;
 set(gca,'YScale','log'); 
 title('Single-Sided Amplitude Spectrum of T(t)')
-xlabel('f (Hz)')
-ylabel('|T(f)|')
+xlabel('$f \left(Hz\right)$')
+ylabel('$|T\left(f\right)|$')
 
 figure(5)
-plot(T((n+1)/2,:))
+plot(T((n+1)/2+30,:))
