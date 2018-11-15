@@ -3,7 +3,7 @@ set(groot, 'defaultAxesTickLabelInterpreter','latex');
 set(groot, 'defaultLegendInterpreter','latex');
 set(groot,'defaulttextinterpreter','latex'); 
 L = 0.5; % Spatial length
-t_start = 0.0; t_end = 10;
+t_start = 0.0; t_end = 1;
 rho_start = 0; rho_end = L; % 1200 for discrete time
 Time = 1; % Time length
 a = 0; c = 2; % boundary conditions
@@ -21,24 +21,24 @@ T0(end) = c;
 % T0 = T0(:,1);
 T = zeros(n+1,m);
 
-s = 2/3 * dt / (drho)^2
+gamma = 1/2;
+s = gamma * 2/3 * dt / (drho)^2
 %%
 % figure(1)
 % plot(T0)
 
 % Input
 sigma = .06; mu = L/2; K = 1;
-Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2);
+Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1)= 0; Pdep(end) = 0;
 % Pdep = ones(1,n+1); Pdep(end) = 0;
 figure(1)
 plot(Pdep)
 
-u = 1*(sin(2*pi*7*t) + sin(2*pi*9*t)) + 3;
+u = 0*(sin(2*pi*7*t) + sin(2*pi*9*t) + 3);
 
 % Initialize Tmperature elements
-% T0 = T0 + Pdep*u(1) ;
 figure(2)
-% T0 = T0 + Pdep;
+T0 = T0 + Pdep;
 plot(T0)
 Told = T0;
 T(:,1) = T0;
@@ -75,6 +75,10 @@ ylabel('$|T(f)|$')
 
 figure(5)
 plot(T((n+1)/2,:))
+
+figure(6)
+plot(T(1,:));
+T(1,80)
 %%
 % figure(5)
 % t = linspace(0,10,10)

@@ -5,7 +5,7 @@ set(groot,'defaulttextinterpreter','latex');
 global ncall;
 
 % Parameter initialization
-t_start = 0.0; t_end = 10;
+t_start = 0.0; t_end = 1;
 ro_start = 0; ro_end = .5; % 1200 for discrete time
 m = 1000.; % timestamps
 n = 499; % grid spaces ! for Pdep to work, choose odd number
@@ -23,7 +23,7 @@ c = 2; % right boundary condition value
 % Set input
 % Pdep = 100*normpdf(0,-round(n/2)+1:round(n/2),10)'; % deposition profile
 sigma = .06; mu = L/2; K = 1;
-Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(ro-mu).^2/sigma.^2)';
+Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(ro-mu).^2/sigma.^2); Pdep(1) = 0; Pdep(end) = 0;
 % Pdep = 200*normpdf(0,-round(n/2):round(n/2),50)';
 % u = @(t) 10*(sin(10*pi*t) + 1)*(t<2.5);
 % Ptot = 0.7; sigma = 0.05;  MW2keVs = .5;%6.24e21/2.1e19; % Factor to convert to keV
@@ -31,10 +31,11 @@ Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(ro-mu).^2/sigma.^2)';
 figure(1)
 plot(Pdep)
 % u = @(t) sin(2*pi*2*t) - sin(2*pi*7*t); % input over time
-u = @(t) 1*(sin(2*pi*7*t) + sin(2*pi*9*t) + 3);
+u = @(t) 0*(sin(2*pi*7*t) + sin(2*pi*9*t) + 3);
 
 % Initial profile
 T0 = 0*sin(2*pi/100*ro) + c;
+T0 = T0 + Pdep;
 T0(n+1) = c; % constant boundary condition (impose)
 
 % ODE call
@@ -51,7 +52,9 @@ set(h,'LineStyle','none')
 xlabel('t ')
 ylabel('$\rho$')
 zlabel('$T\left(\rho,t\right)$')
-
+figure(3)
+plot(T(1,:))
+T(1,80)
 %%               
  m = 200;
 S = T((n+1)/2,801:end);
@@ -124,11 +127,11 @@ plot(T((n+1)/2,:))
 
 %% 3rd order
 clear all; clc; close all
-
+tic
 % Parameter initialization
-t_start = 0.0; t_end = 50;
+t_start = 0.0; t_end = 30;
 ro_start = 0; ro_end = 1000; % 1200 for discrete time
-m = 5000.; % timestamps
+m = 3000.; % timestamps
 n = 99; % grid spaces ! for Pdep to work, choose odd number
 tsim = linspace(t_start,t_end - t_end/m,m);
 dt = tsim(2)-tsim(1); Fs = 1/dt;
@@ -151,7 +154,7 @@ figure(1)
 plot(Pdep)
 
 % u = @(t) sin(2*pi*2*t) - sin(2*pi*7*t); % input over time
-u = @(t) 1*(sin(2*pi*7*t) + sin(2*pi*9*t) + 3);
+u = @(t) 1*(sin(2*pi*11*t) + sin(2*pi*14*t) + 3);
 
 % Initial profile
 T0 = zeros(n+1,1) + c;
@@ -166,6 +169,7 @@ options = odeset('RelTol',reltol,'AbsTol',abstol);
 % [t,T] = ode15s(@lin_eq,tsim,T0,options,u,Pdep,b,dx,n);
 [t,T] = ode45(@nonlin_sys_3rd,tsim,T0,options,u,Pdep,b,dx,n);
 T = T'; % time on collumns
+%%
 figure(2);
 h = surf(t,ro,T)
 set(h,'LineStyle','none')
@@ -174,10 +178,10 @@ ylabel('$\rho$')
 zlabel('$T\left(\rho,t\right)$')
 figure(3)
 plot(T((n+1)/2,:));
-
+toc
 %%               
  m = 600;
-S = T((n+1)/2-20,4401:end);
+S = T((n+1)/2-20,2401:end);
 Y = fft(S)/length(S);
 P2 = abs(Y);
 P1 = P2(1:m/2+1);
@@ -194,3 +198,7 @@ ylabel('$|T(f)|$')
 
 figure(5)
 plot(T((n+1)/2-20,:))
+
+figure(6)
+plot(T(1,:))
+T(1,end)

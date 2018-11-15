@@ -1,6 +1,6 @@
-function [T] = Newton_alg_3rd_order(Told,a,c,drho,dt,Pdep,u)
+function [T] = Newton_algorithm(Told,c,drho,dt,Pdep,u)
 %   Detailed explanation goes here
-s = 1000000*dt / 4 / (drho)^4; %% is minus ok
+s = 1e6*dt / 4 / (drho)^4;
 q = 2/3 * dt;
 n = length(Told) - 1;
 F = zeros(n+1,1);

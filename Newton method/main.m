@@ -4,12 +4,12 @@ set(groot, 'defaultLegendInterpreter','latex');
 set(groot,'defaulttextinterpreter','latex'); 
 % nonlinear PDE with alpha = 1
 L = 1000; % Spatial length
-t_start = 0.0; t_end = 10;
+t_start = 0.0; t_end = 50;
 rho_start = 0; rho_end = L; % 1200 for discrete time
 Time = 1; % Time length
 a = 0; c = 2; % boundary conditions
-n = 199; % spaces in spatial length (grid points = n + 1)
-m = 1000; % time points 
+n = 99; % spaces in spatial length (grid points = n + 1)
+m = 5000; % time points 
 
 % t = linspace(t_start,t_end ,m);
 t = linspace(t_start,t_end - t_end/m ,m);
@@ -22,14 +22,14 @@ T0(end) = c;
 % T0 = T0(:,1);
 T = zeros(n+1,m);
 
-s = 2/3 * dt / (drho)^3
+s = 1/3 * dt / (drho)^3
 %%
 % figure(1)
 % plot(T0)
 
 % Input
-sigma = 100; mu = L/2; K = 10000;
-Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2);
+sigma = 125; mu = L/2; K = 10000;
+Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1) = 0; Pdep(end) = 0;
 figure(1)
 plot(Pdep)
 
