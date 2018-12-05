@@ -2,8 +2,8 @@ clc; clear all; close all
 set(groot, 'defaultAxesTickLabelInterpreter','latex'); 
 set(groot, 'defaultLegendInterpreter','latex');
 set(groot,'defaulttextinterpreter','latex'); 
-L = 0.5; % Spatial length
-t_start = 0.0; t_end = 1;
+L = 5; % Spatial length
+t_start = 0.0; t_end = 10;
 rho_start = 0; rho_end = L; % 1200 for discrete time
 Time = 1; % Time length
 a = 0; c = 2; % boundary conditions
@@ -21,7 +21,7 @@ T0(end) = c;
 % T0 = T0(:,1);
 T = zeros(n+1,m);
 
-gamma = 1/2;
+gamma = 1;
 s = gamma * 2/3 * dt / (drho)^2
 %%
 % figure(1)
@@ -29,16 +29,18 @@ s = gamma * 2/3 * dt / (drho)^2
 
 % Input
 sigma = .06; mu = L/2; K = 1;
-Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1)= 0; Pdep(end) = 0;
+% Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1)= 0; Pdep(end) = 0;
+Pdep = ((pi/2/L)^2-3/2)*cos(pi/2/L*rho);
 % Pdep = ones(1,n+1); Pdep(end) = 0;
 figure(1)
 plot(Pdep)
 
-u = 0*(sin(2*pi*7*t) + sin(2*pi*9*t) + 3);
+u = 0*(sin(2*pi*7*t) + sin(2*pi*9*t) + 3)+exp(-t);
 
 % Initialize Tmperature elements
 figure(2)
-T0 = T0 + Pdep;
+% T0 = T0 + Pdep;
+T0 = T0 + cos(pi/2/L*rho);
 plot(T0)
 Told = T0;
 T(:,1) = T0;
@@ -88,4 +90,13 @@ T(1,80)
 % X = fft(x) / length(x);
 % X = abs(X);
 % stem(X)
+%%
+T_sol = cos(pi/2/L*rho)*exp(-t) + c;
+figure
+plot(T(:,end)); hold on
+plot(c + cos(pi/2/L*rho)*exp(-t_end),'r');
+hold off
 
+figure
+plot(T((n+1)/2,:)); hold on
+plot(T_sol((n+1)/2,:)); hold off

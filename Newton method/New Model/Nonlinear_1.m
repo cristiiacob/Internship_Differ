@@ -4,12 +4,12 @@ set(groot,'defaulttextinterpreter','latex');
 
 clear all; clc; close all
 
-select_method = 1;
+select_method = 2;
 % select 1 - Newton iteration
 % select 2 - Method of lines
 
 L = 1000; % Spatial length
-t_start = 0.0; t_end = 10; % time limits
+t_start = 0.0; t_end = 100; % time limits
 rho_start = 0; rho_end = L; % spatial limits
 c = 2; % constant boundary condition
 n = 99; % spaces in spatial length (grid points = n + 1)
@@ -26,7 +26,7 @@ T(:,1) = T0;
 % Deposition profile (spatial function for the input)
 sigma = 125; mu = L/2; K = 100000;
 Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1) = 0; Pdep(end) = 0;
-Pdep = -1000*3/2*cos(pi/2/L*rho).*((pi/2/L)^4*(sin(pi/2/L*rho).^2)-1);
+% Pdep = -1000*3/2*cos(pi/2/L*rho).*((pi/2/L)^4*(sin(pi/2/L*rho).^2)-1);
 % figure
 % plot(Pdep)
 
@@ -50,7 +50,7 @@ switch select_method
         reltol = 1.0e-10; abstol=1.0e-10;
         options = odeset('RelTol',reltol,'AbsTol',abstol);
         tic
-        [~,T] = ode23(@Method_of_Lines,t,T0,options,u,Pdep,drho,n);
+        [~,T] = ode23(@ML_1,t,T0,options,u,Pdep,drho,n);
         toc
         T = T'; % time on collumns
 end
@@ -65,36 +65,3 @@ xlabel('t')
 ylabel('$\rho$')
 zlabel('$T\left(\rho,t\right)$')
 title('Temperature distribution evolution')
-
-figure
-
-subplot(121)
-% time plot of the temperature evolution of one spatial point
-plot(t,T((n+1)/2-20,:))
-xlabel('t')
-ylabel('$T\left(30,t\right)$')
-
-subplot(122)
-% spatial temperature distribution at a particular time instant
-plot(rho,T(:,600))
-xlabel('$\rho$')
-ylabel('$T\left(\rho,t\right)$')
-
-%% Harmonic analysis
-
-p = 3000;
-S = T(1,7001:end);
-Y = fft(S)/length(S);
-P2 = abs(Y);
-P1 = P2(1:p/2+1);
-P1(2:end-1) = 2*P1(2:end-1);
-
-f = Fs*(0:(p/2))/p;
-
-figure
-
-stem(f(1:151),P1(1:151));
-set(gca,'YScale','log');
-title('Single-Sided Amplitude Spectrum of T')
-xlabel('f(Hz)')
-ylabel('$|T(f)|$')
