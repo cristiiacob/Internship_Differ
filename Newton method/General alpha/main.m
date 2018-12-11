@@ -8,7 +8,7 @@ select_method = 1;
 % select 1 - Newton iteration
 % select 2 - Method of lines
 
-L = 100; % Spatial length
+L = 1; % Spatial length
 t_start = 0.0; t_end = 10; % time limits
 rho_start = 0; rho_end = L; % spatial limits
 c = 0; % constant boundary condition
@@ -25,7 +25,7 @@ T0 = zeros(n+1,1) + c; % initial temperature distribtution
 % sigma = 125; mu = L/2; K = 100000;
 % Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1) = 0; Pdep(end) = 0;
 
-Pdep = 1*10000*cos(pi/2/L*rho); Pdep(end) = 0;
+Pdep = 1*1000*cos(pi/2/L*rho); Pdep(end) = 0;
 
 figure
 plot(Pdep)
@@ -78,10 +78,10 @@ figure
 
 subplot(121)
 % time plot of the temperature evolution of one spatial point
-plot(t,T((n+1)/2-20,:))
+plot(t(1:2000),T(1,1:2000))
 xlabel('t')
-ylabel('$T\left(30,t\right)$')
-
+ylabel('$T\left(1,t\right)$')
+title('Temperature evolution')
 subplot(122)
 % spatial temperature distribution at a particular time instant
 plot(rho,T(:,600))
@@ -102,8 +102,8 @@ f = Fs*(0:(p/2))/p;
 figure
 
 stem(f(1:151),P1(1:151)); hold on
-plot(f(1:151),1e-1*ones(1,151),'-.r');
-plot(f(1:151),1e-3*ones(1,151),'-.r'); 
+% plot(f(1:151),1e-1*ones(1,151),'-.r');
+plot(f(1:151),1e-2*ones(1,151),'-.r'); 
 hold off
 set(gca,'YScale','log');
 title('Single-Sided Amplitude Spectrum of T')
