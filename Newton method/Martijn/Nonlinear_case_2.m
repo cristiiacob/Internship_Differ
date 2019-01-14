@@ -26,7 +26,7 @@ T(:,1) = T0;
 % Deposition profile (spatial function for the input)
 sigma = 125; mu = L/2; K = 100000;
 Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1) = 0; Pdep(end) = 0;
-Pdep = -1000*3/2*cos(pi/2/L*rho).*((pi/2/L)^4*(sin(pi/2/L*rho).^2)-1);
+% Pdep = -1000*3/2*cos(pi/2/L*rho).*((pi/2/L)^4*(sin(pi/2/L*rho).^2)-1);
 % figure
 % plot(Pdep)
 
@@ -83,7 +83,7 @@ ylabel('$T\left(\rho,t\right)$')
 %% Harmonic analysis
 
 p = 3000;
-S = T(1,7001:end);
+S = T((n+1)/2-20,7001:end);
 Y = fft(S)/length(S);
 P2 = abs(Y);
 P1 = P2(1:p/2+1);
