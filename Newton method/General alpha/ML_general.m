@@ -1,6 +1,5 @@
-function [dTdt] = ML_general(t,T,u,Pdep,drho,n)
-gamma = 1;
-alpha = 0;
+function [dTdt] = ML_general(t,T,u,Pdep,drho,n,gamma,alpha)
+
 a = 2/3;
 s = gamma * a * (alpha + 1) / 2^alpha / (drho)^(alpha+2);
 

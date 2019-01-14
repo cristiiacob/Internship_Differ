@@ -2,7 +2,8 @@ set(groot, 'defaultAxesTickLabelInterpreter','latex');
 set(groot, 'defaultLegendInterpreter','latex');
 set(groot,'defaulttextinterpreter','latex');
 
-clear all; clc; close all
+clear all; 
+clc; close all
 
 select_method = 1;
 % select 1 - Newton iteration
@@ -21,18 +22,27 @@ drho = rho(2) - rho(1);
 dt = t(2) - t(1); Fs = 1/dt;
 T0 = zeros(n+1,1) + c; % initial temperature distribtution
 
+gamma = 1;
+alpha = 2;
+
 % Deposition profile (spatial function for the input)
-% sigma = 125; mu = L/2; K = 100000;
+
+% % For Frequency analysis, the space point that is analysed over time has
+% % to be changed (section Harmonic analysis)
+% sigma = 12.5; mu = L/2; K = 100000;
 % Pdep = K * 1/(sigma*sqrt(pi))*exp(-(1/2)*(rho-mu).^2/sigma.^2); Pdep(1) = 0; Pdep(end) = 0;
 
-Pdep = 1*1000*cos(pi/2/L*rho); Pdep(end) = 0;
+% Better input for frequency analysis. However, the Method of lines seems 
+% to show numerical problems for low values of L
+Pdep = 1e3*cos(pi/2/L*rho); Pdep(end) = 0;
 
 figure
-plot(Pdep)
+plot(rho,Pdep);
+xlabel('$\rho$');
+title('Deposition profile');
 %%
-% T0 = T0 + Pdep;
+% T0 = T0 + Pdep; % if a nonconstant initial profile is desired
 k = 0;
-% T0 = T0 + cos((2*k+1)*pi/2/L*rho);
 Told = T0;
 T = zeros(n+1,m);
 T(:,1) = T0;
@@ -45,7 +55,7 @@ switch select_method
         % Loop for running the Newton algorithm for each time step
         tic
         for j = 2:m % loop thorugh time steps
-            T(:,j) = Newton_general(Told,c,drho,dt,Pdep,u(j));
+            T(:,j) = Newton_general(Told,c,drho,dt,Pdep,u(j),gamma,alpha);
             Told = T(:,j);
         end
         toc
@@ -57,7 +67,7 @@ switch select_method
         reltol = 1.0e-10; abstol=1.0e-10;
         options = odeset('RelTol',reltol,'AbsTol',abstol);
         tic
-        [~,T] = ode23(@ML_general,t,T0,options,u,Pdep,drho,n);
+        [~,T] = ode23(@ML_general,t,T0,options,u,Pdep,drho,n,gamma,alpha);
         toc
         T = T'; % time on collumns
 end
@@ -76,18 +86,18 @@ title('Temperature distribution evolution')
 
 figure
 
-subplot(121)
 % time plot of the temperature evolution of one spatial point
-plot(t(1:2000),T(1,1:2000))
+plot(t(1:5000),T(1,1:5000))
 xlabel('t')
 ylabel('$T\left(1,t\right)$')
 title('Temperature evolution')
-subplot(122)
-% spatial temperature distribution at a particular time instant
-plot(rho,T(:,600))
-xlabel('$\rho$')
-ylabel('$T\left(\rho,t\right)$')
 
+% figure
+% % spatial temperature distribution at a particular time instant
+% plot(rho,T(:,600))
+% xlabel('$\rho$')
+% ylabel('$T\left(\rho,t\right)$')
+% title('Initial profile')
 %% Harmonic analysis
 
 p = 3000;
@@ -111,21 +121,21 @@ xlabel('f(Hz)')
 ylabel('$|T(f)|$')
 
 %%
-for i = 1:length(t)
-    for j = 1:length(rho)
-        Tan(j,i) = exp(-2/3*((2*k+1)*pi/2/L)^2*t(i))*cos((2*k+1)*pi/2/L*rho(j));
-    end
-end
-figure
-surf(Tan)
-
-Err = zeros(1,length(t));
-for i = 1:length(t)
-   Err(i) = abs(T(1,i) - Tan(1,i));
-end
-figure
-plot(t,Err);
-
-figure
-plot(T(1,:)); hold on
-plot(Tan(1,:),'r');
+% for i = 1:length(t)
+%     for j = 1:length(rho)
+%         Tan(j,i) = exp(-2/3*((2*k+1)*pi/2/L)^2*t(i))*cos((2*k+1)*pi/2/L*rho(j));
+%     end
+% end
+% figure
+% surf(Tan)
+% 
+% Err = zeros(1,length(t));
+% for i = 1:length(t)
+%    Err(i) = abs(T(1,i) - Tan(1,i));
+% end
+% figure
+% plot(t,Err);
+% 
+% figure
+% plot(T(1,:)); hold on
+% plot(Tan(1,:),'r');

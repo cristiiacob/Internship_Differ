@@ -1,6 +1,5 @@
-function [T] = Newton_general(Told,c,drho,dt,Pdep,u)
-gamma = 1;
-alpha = 2;
+function [T] = Newton_general(Told,c,drho,dt,Pdep,u,gamma,alpha)
+
 a = 2/3;
 s = gamma * dt * a * (alpha + 1) / 2^alpha / (drho)^(alpha+2);
 q = a * dt;

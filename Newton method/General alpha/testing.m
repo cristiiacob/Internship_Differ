@@ -9,7 +9,7 @@ select_method = 1;
 % select 1 - Newton iteration
 % select 2 - Method of lines
 
-L = 100; % Spatial length
+L = 1; % Spatial length
 t_start = 0.0; t_end = 10; % time limits
 rho_start = 0; rho_end = L; % spatial limits
 c = 2; % constant boundary condition
@@ -23,7 +23,7 @@ dt = t(2) - t(1); Fs = 1/dt;
 T0 = zeros(n+1,1) + c; % initial temperature distribtution
 
 gamma = 1;
-alpha = 0;
+alpha = 2;
 
 
 % Deposition profile (spatial function for the input)
@@ -31,7 +31,7 @@ Pdep1 = (alpha + 1)*gamma*(-(pi/2/L)*sin(pi/2/L*rho)).^alpha.*((pi/2/L)^2*cos(pi
 Pdep2 = -3/2*cos(pi/2/L*rho);
 figure
 plot(Pdep1+Pdep2)
-%%
+
 % T0 = T0 + Pdep;
 T0 = T0 + cos(pi/2/L*rho);
 Told = T0;
@@ -63,8 +63,6 @@ switch select_method
         T = T'; % time on collumns
 end
 
-%% Plots
-
 % 3D plot
 figure
 h = surf(t,rho,T)
@@ -73,7 +71,6 @@ xlabel('t')
 ylabel('$\rho$')
 zlabel('$T\left(\rho,t\right)$')
 
-%%
 Tsol = cos(pi/2/L*rho).*exp(-t) + c;
 figure
 plot(t,T(1,:)); hold on
